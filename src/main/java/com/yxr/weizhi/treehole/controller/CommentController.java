@@ -1,9 +1,18 @@
 package com.yxr.weizhi.treehole.controller;
 
 
+import com.yxr.weizhi.treehole.entity.Comment;
+import com.yxr.weizhi.treehole.service.CommentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,9 +22,38 @@ import org.springframework.web.bind.annotation.RestController;
  * @author liqiqiorz
  * @since 2020-07-23
  */
-@RestController
+@Controller
 @RequestMapping("/treehole/comment")
 public class CommentController {
+
+    @Autowired
+    private CommentService commentService;
+
+    @Value("${comment.avatar}")
+    private String avatar;
+
+    @GetMapping("/")
+    public String comment() {
+        return "comment";
+    }
+
+    @GetMapping("/comment")
+    public String comments(Model model) {
+        List<Comment> comments = commentService.listComment();
+        model.addAttribute("comments", comments);
+        return "comment :: commentList";
+    }
+
+    @PostMapping("/comment")
+    public String post(Comment comment) {
+        //设置头像
+        comment.setAvatar(avatar);
+        if (comment.getParentComment().getId() != null) {
+            comment.setParentCommentId(comment.getParentComment().getId());
+        }
+        commentService.saveComment(comment);
+        return "redirect:/comment";
+    }
 
 }
 
