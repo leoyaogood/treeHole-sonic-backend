@@ -1,9 +1,12 @@
 package com.yxr.weizhi.treehole.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.util.ArrayList;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,6 +41,11 @@ public class Comment implements Serializable {
     private Date createTime;
 
     private Long parentCommentId;
+
+    //回复评论
+    private List<Comment> replyComments = new ArrayList<>();
+    private Comment parentComment;
+    private String parentNickname;
 
 
 }
