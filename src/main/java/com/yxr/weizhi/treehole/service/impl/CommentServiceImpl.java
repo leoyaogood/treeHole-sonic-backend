@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ import java.util.List;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     @Autowired
-    private CommentDao commentDao;
+    private CommentMapper commentMapper;
 
     //存放迭代找出的所有子代的集合
     private List<Comment> tempReplys = new ArrayList<>();
@@ -30,11 +31,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public List<Comment> listComment() {
         //查询出父节点
-        List<Comment> comments = commentDao.findByParentIdNull(Long.parseLong("-1"));
+        List<Comment> comments = commentMapper.findByParentIdNull(Long.parseLong("-1"));
         for(Comment comment : comments){
             Long id = comment.getId();
             String parentNickname1 = comment.getNickname();
-            List<Comment> childComments = commentDao.findByParentIdNotNull(id);
+            List<Comment> childComments = commentMapper.findByParentIdNotNull(id);
             //查询出子评论
             combineChildren(childComments, parentNickname1);
             comment.setReplyComments(tempReplys);
@@ -62,7 +63,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     private void recursively(Long childId, String parentNickname1) {
         //根据子一级评论的id找到子二级评论
-        List<Comment> replayComments = commentDao.findByReplayId(childId);
+        List<Comment> replayComments = commentMapper.findByReplayId(childId);
 
         if(replayComments.size() > 0){
             for(Comment replayComment : replayComments){
@@ -80,6 +81,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     //存储评论信息
     public int saveComment(Comment comment) {
         comment.setCreateTime(new Date());
-        return commentDao.saveComment(comment);
+        return commentMapper.saveComment(comment);
     }
 }
