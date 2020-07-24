@@ -22,10 +22,8 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
 
-
-    @Autowired
-    private UserService userService;
-
+  @Autowired(required = false)
+  private UserService userService;
     /**
      * @Description: 跳转登录页面
      * @Param:
@@ -35,7 +33,7 @@ public class LoginController {
     public String loginPage(){
         return "admin/login";
     }
-    
+
     /**
      * @Description: 登录校验
      * @Param: username:用户名
