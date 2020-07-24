@@ -16,7 +16,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Autowired
     private UserMapper userMapper;
 
-   
+
     @Override
     public User checkUser(String username, String password) {
         User user = userMapper.findByUsernameAndPassword(username, MD5Utils.code(password));
