@@ -11,6 +11,7 @@ import java.util.List;
 public class Message {
 
 
+
     private Long id;
     private String nickname;
     private String email;
